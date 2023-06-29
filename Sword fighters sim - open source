@@ -1,0 +1,127 @@
+local mobs = game:GetService("Workspace").Live.NPCs.Server
+local mobs2 = game:GetService("Workspace").Live.NPCs.Client
+local humanoid = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+local rs = game:GetService("RunService")
+
+local ArrayField = loadstring(game:HttpGet('https://raw.githubusercontent.com/UI-Interface/ArrayField/main/Source.lua'))()
+local Window = ArrayField:CreateWindow({
+   Name = "Open source script, please leave creds",
+   LoadingTitle = "Open source script",
+   LoadingSubtitle = "by Shyde#0044",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "ArrayField"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key", -- It is recommended to use something unique as other scripts using ArrayField may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like ArrayField to get the key from
+      Actions = {
+            [1] = {
+                Text = 'Click here to copy the key link <--',
+                OnPress = function()
+                    print('Pressed')
+                end,
+                }
+            },
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+local Tab = Window:CreateTab("Main Tab", 4483362458) -- Title, Image
+local Section = Tab:CreateSection("Killaura Settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+local killdist = Tab:CreateSlider({
+    Name = "Killaura distance",
+    Range = {10, 50},
+    Increment = 1,
+    Suffix = "Magnitude",
+    CurrentValue = 10,
+    Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function() end
+ })
+
+local killai = Tab:CreateToggle({
+   Name = "KillAura toggle",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function() end
+})
+
+rs.Heartbeat:Connect(function()
+    if killai.CurrentValue then
+        for _,v in mobs:GetChildren() do
+            if (humanoid.Position - v.Position).magnitude < killdist.CurrentValue then
+                print('there is mob')
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ClickService"):WaitForChild("RF"):WaitForChild("Click"):InvokeServer(v.Name)
+            end
+        end
+    end
+end)
+local Section = Tab:CreateSection("Auto Collect Settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+local collect = Tab:CreateToggle({
+    Name = "Auto collect toggle",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function() end
+ })
+
+ rs.Heartbeat:Connect(function()
+    if collect.CurrentValue then
+        local currency = game:GetService("Workspace").Live.Pickups
+        for _,v in currency:GetChildren() do
+            v.CFrame = humanoid.CFrame
+        end
+    end
+ end)
+ local Section = Tab:CreateSection("Teleport Above settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+ local telabovedist = Tab:CreateSlider({
+    Name = "Teleport above distance",
+    Range = {10, 50},
+    Increment = 1,
+    Suffix = "Magnitude",
+    CurrentValue = 10,
+    Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function() end
+ })
+
+ local telabove = Tab:CreateToggle({
+    Name = "Teleport above nearest mob",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function() end
+ })
+ 
+ rs.Heartbeat:Connect(function()
+    if telabove.CurrentValue then
+        for i,v in mobs:GetChildren() do
+            if (humanoid.Position - v.Position).magnitude < telabovedist.CurrentValue then
+                print('teleporting above')
+                humanoid.CFrame = v.CFrame + Vector3.new(0, 20, 0)
+            end
+        end        
+    end
+ end)
+
+ local Button = Tab:CreateButton({
+    Name = "Teleport all mobs in location to you",
+    Interact = 'Click',
+    Callback = function()
+        for i,v in next, mobs:GetChildren() do
+            v.HumanoidRootPart.CFrame = humanoid.CFrame
+        end
+    end,
+ })
+ 
+
+ local Tab = Window:CreateTab("Creds", 4483362458) -- Title, Image
+
+ local Label = Tab:CreateLabel("Script creator: Shyde#0044")

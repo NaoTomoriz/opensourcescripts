@@ -38,14 +38,15 @@ local Window = ArrayField:CreateWindow({
    }
 })
 local Tab = Window:CreateTab("Main Tab", 4483362458) -- Title, Image
-local Section = Tab:CreateSection("Killaura Settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+local kssss = Tab:CreateSection("Killaura Settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
 local killdist = Tab:CreateSlider({
     Name = "Killaura distance",
     Range = {10, 50},
     Increment = 1,
     Suffix = "Magnitude",
     CurrentValue = 10,
-    Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Flag = "Slider1",
+    SectionParent = kssss,
     Callback = function() end
  })
 
@@ -66,11 +67,12 @@ rs.Heartbeat:Connect(function()
         end
     end
 end)
-local Section = Tab:CreateSection("Auto Collect Settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+local acsss = Tab:CreateSection("Auto Collect Settings",false)
 local collect = Tab:CreateToggle({
     Name = "Auto collect toggle",
     CurrentValue = false,
     Flag = "Toggle1",
+    SectionParent = acsss,
     Callback = function() end
  })
 
@@ -82,14 +84,15 @@ local collect = Tab:CreateToggle({
         end
     end
  end)
- local Section = Tab:CreateSection("Teleport Above settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+ local tassss = Tab:CreateSection("Teleport Above settings",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
  local telabovedist = Tab:CreateSlider({
     Name = "Teleport above distance",
-    Range = {10, 50},
+    Range = {10, 250},
     Increment = 1,
     Suffix = "Magnitude",
     CurrentValue = 10,
-    Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Flag = "Slider1",
+    SectionParent = tassss,
     Callback = function() end
  })
 
@@ -97,15 +100,16 @@ local collect = Tab:CreateToggle({
     Name = "Teleport above nearest mob",
     CurrentValue = false,
     Flag = "Toggle1",
+    SectionParent = tassss,
     Callback = function() end
  })
  
  rs.Heartbeat:Connect(function()
     if telabove.CurrentValue then
-        for i,v in mobs:GetChildren() do
-            if (humanoid.Position - v.Position).magnitude < telabovedist.CurrentValue then
+        for i,v in mobs2:GetChildren() do
+            if (humanoid.Position - v.HumanoidRootPart.Position).magnitude < telabovedist.CurrentValue then
                 print('teleporting above')
-                humanoid.CFrame = v.CFrame + Vector3.new(0, 20, 0)
+                humanoid.CFrame = v.WorldPivot + Vector3.new(0, 20, 0)
             end
         end        
     end
@@ -114,6 +118,7 @@ local collect = Tab:CreateToggle({
  local Button = Tab:CreateButton({
     Name = "Teleport all mobs in location to you",
     Interact = 'Click',
+    SectionParent = tassss,
     Callback = function()
         for i,v in next, mobs:GetChildren() do
             v.HumanoidRootPart.CFrame = humanoid.CFrame

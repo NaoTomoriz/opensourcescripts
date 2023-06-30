@@ -54,6 +54,7 @@ local killai = Tab:CreateToggle({
    Name = "KillAura toggle",
    CurrentValue = false,
    Flag = "Toggle1",
+   SectionParent = kssss,
    Callback = function() end
 })
 
